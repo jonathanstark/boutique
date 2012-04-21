@@ -11,10 +11,12 @@
         <script src="boutique.js"></script>
         <script type="text/javascript" charset="utf-8">
             
+            // Boutique throws all sorts of events you can listen for...
             document.addEventListener('boutique', function(e){
                 console.log(e);
             }, false);
         
+            // Create a new "table"
             var people = new Boutique('people');
 
             // Insert records with auto-generated ids and timestamps
@@ -24,26 +26,26 @@
             };
             
             // Insert records with different amounts of predefined auto-enter data
-            var result = people.insert({'name':'gsprague', 'id':'1238'}); 
-            var result = people.insert({'name':'cmoyer', 'id':'1239', 'created_at': '2012-12-21 00:00:00', 'updated_at': '2012-12-21 00:00:00'}); 
+            people.insert({'name':'gsprague', 'id':'1238'}); 
+            people.insert({'name':'cmoyer', 'id':'1239', 'created_at': '2012-12-21 00:00:00', 'updated_at': '2012-12-21 00:00:00'}); 
 
             // Delete all records where id equals 1239
-            var result = people.delete('id', '1239');
+            people.delete('id', '1239');
 
             // Update all records where name equals esmith
-            var result = people.update('name', 'esmith', {'name':'ericasmith'}); 
+            people.update('name', 'esmith', {'name':'ericasmith'}); 
             
             // Delete all records where name equals ericasmith
-            var result = people.delete('name', 'ericasmith'); 
+            people.delete('name', 'ericasmith'); 
             
             // Get all records from the table
-            var result = people.selectAll();
+            people.selectAll();
 
             // Delete all records from the table
-            var result = people.deleteAll();
+            people.deleteAll();
 
             // Destroy the store (i.e., drop table)
-            var result = people.drop();
+            people.drop();
 
         </script>
     </body>
