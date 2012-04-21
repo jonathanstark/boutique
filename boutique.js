@@ -37,7 +37,6 @@ var Boutique = function(name, options) {
         // We've been here before, so overwrite any seed records with what's in local storage
         this._records = JSON.parse(localStorage.getItem(this._name));
     }
-
 }
 
 Boutique.prototype = {
@@ -64,13 +63,19 @@ Boutique.prototype = {
         detail.changed_records = records || [];
 
         // Dispatch a bunch of events
-        var types = ['boutique', 'boutique'+type, 'boutique'+this._display_name, 'boutique'+type+this._display_name, 'boutique'+this._display_name+type];
-        for (var i=0; i < types.length; i++) {
+        var types = [
+            'boutique', 
+            'boutique'+type, 
+            'boutique'+this._display_name, 
+            'boutique'+type+this._display_name, 
+            'boutique'+this._display_name+type
+        ];
+        for (var i = 0; i < types.length; i++) {
+            // TODO: Check that CustomEvent exists
             var boutiqueEvent = document.createEvent('CustomEvent');
             boutiqueEvent.initCustomEvent(types[i], false, false, detail);
             document.dispatchEvent(boutiqueEvent);
         };
-
     },
     delete: function(key, value) { // Delete any records where key equals value and return them as an array of 0-n objects
         var indexes = [];
@@ -99,7 +104,7 @@ Boutique.prototype = {
         this._trigger('drop');
         return true;
     },
-    insert: function(record) { // Optionally augment passed object with default values, append to records db, and return lone object
+    insert: function(record) { // Optionally augment record, append to records db, and return lone record
         var id = this._id();
         var now = this._now();
         if (record[this._primary_key] == undefined) {
