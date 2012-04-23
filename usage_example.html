@@ -8,6 +8,7 @@
             <h1>Boutique</h1>
             <p>A little data store for old javascript devs.</p>
         </header>
+        <button onclick="people.drop();">Drop Table</button>
         <script src="boutique.js"></script>
         <script type="text/javascript" charset="utf-8">
             
@@ -20,7 +21,7 @@
             // Create a new "table"
             var people = new Boutique('people');
 
-            // Insert records with auto-generated ids and timestamps
+            // Insert records (ids and timestamps will be created automatically)
             var names = ['jstark','cooperstark','esmith','esmith','greglane'];
             for (var i=0; i < names.length; i++) {
                 var result = people.insert({'name':names[i]});
@@ -43,10 +44,10 @@
             people.selectAll();
 
             // Delete all records from the table
-            people.deleteAll();
+            // people.deleteAll();
 
             // Destroy the store (i.e., drop table)
-            people.drop();
+            // people.drop();
 
         </script>
     </body>
