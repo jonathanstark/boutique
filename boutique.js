@@ -30,7 +30,7 @@ var Boutique = function(name, options) {
     this._updated_at    = options.updated_at_field_name || 'updated_at';
 
     // Init the persistant storage
-    if (localStorage.key(this._name) == undefined) {
+    if (localStorage.getItem(this._name) == null) {
         // This is our first visit, so insert any seed records into local storage
         localStorage.setItem(this._name, JSON.stringify(this._records));
     } else {
@@ -42,7 +42,6 @@ var Boutique = function(name, options) {
 Boutique.prototype = {
     _commit: function() {
         localStorage.setItem(this._name, JSON.stringify(this._records));
-        this._trigger('commit');
     },
     _id: function () { // Brazenly stolen from Lawnchair.js ;)
         var S4 = function () {
@@ -88,14 +87,16 @@ Boutique.prototype = {
         for (var i = 0, max = indexes.length; i < max; i++) {
             records.push(this._records.splice(indexes[i],1)[0]);
         }
-        this._trigger('delete');
         this._commit();
+        this._trigger('delete');
+        this._trigger('commit');
         return records;
     },
     deleteAll: function() {
         this._records = [];
-        this._trigger('delete');
         this._commit();
+        this._trigger('delete');
+        this._trigger('commit');
         return true;
     },
     drop: function() {
@@ -117,8 +118,9 @@ Boutique.prototype = {
             record[this._updated_at] = now;
         }
         this._records.push(record);
-        this._trigger('insert', [record]);
         this._commit();
+        this._trigger('insert', [record]);
+        this._trigger('commit');
         return record;
     },
     select: function(key, value) { // Select all records where key equals value and return them as an array of 0-n objects
@@ -148,8 +150,9 @@ Boutique.prototype = {
                 records.push(this._records[i]);
             }
         }
-        this._trigger('update', records);
         this._commit();
+        this._trigger('update', records);
+        this._trigger('commit');
         return records;
     }
 };
