@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Boutique.js - A little data store for old javascript devs.</title>
+    </head>
+    <body>
+        <h1>Todo List</h1>
+        <form id="todo_form" method="post" accept-charset="utf-8">
+                <p><input type="text" name="todo_field" value="" id="todo_field" /></p>
+                <p><input type="submit" value="Create Todo" /></p>
+        </form>
+        <p>You have <span id="todo_count">?</span> todos remaining.</p>
+        <div id="todo_list_wrapper"></div>
+
+        
+        
+        <script src="boutique.js"></script>
+        <script type="text/javascript" charset="utf-8">
+        
+            // Create a "table" in the "database"
+            var todo_table = new Boutique('todos');
+            
+            // Listen for any commits (insert, update, delete) to the databaase
+            document.addEventListener('boutiquecommit', update_ui, false);
+
+            // Cache references to DOM objects
+            var count = document.getElementById('todo_count');
+            var form = document.getElementById('todo_form');
+            var wrapper = document.getElementById('todo_list_wrapper');
+            var field = document.getElementById('todo_field');
+            
+            // Attach runtime event handlers
+            form.addEventListener('submit', function(e){
+                e.preventDefault();
+                if(field.value!=''); {
+                    todo_table.insert({'description':field.value});
+                }
+                field.value = '';
+            }, false);
+            
+            wrapper.addEventListener('click', handle_click, false);
+
+            init();
+
+            // Define functions
+            function handle_click(e) {
+                e.preventDefault();
+                if(e.target.hash=="#delete") {
+                    todo_table.delete('id', e.target.id);
+                }
+                if(e.target.hash=="#edit") {
+                    todo_table.update('id', e.target.id, {'description':'updated'});
+                }
+            }
+            function init() {
+                update_ui();
+            }
+            function update_ui(e) {
+                var todos = todo_table.selectAll();
+                count.innerHTML = todos.length;
+                var html = '';
+                if (todos.length == 0) {
+                    html = '<p>Hooray!</p>';
+                } else {
+                    html+= '<ul>';
+                    for (var i=0; i < todos.length; i++) {
+                        html+= '<li><a href="#delete" id="' + todos[i].id+'">[delete]</a> <a href="#edit" id="' + todos[i].id+'">[edit]</a> <span>'+todos[i].description+'</span></li>';
+                     }
+                }
+                wrapper.innerHTML = html;
+            }
+
+        </script>
+    </body>
+</html>
